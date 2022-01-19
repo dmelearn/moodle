@@ -121,10 +121,11 @@ class sync_grades extends \core\task\scheduled_task {
                                 
                                 // Digital Media Support for 0.0000 Grades //
                                 $dm_gradelessCourseGrade = floatval(88.00000);
-                                if (!grade_floats_different($dm_gradelessCourseGrade, $grademax)) {
+                                if (!grade_floats_different($dm_gradelessCourseGrade, $grademax)
+                                   && grade_float_different($dm_gradelessCourseGrade, $grade)
+                                   ) {
                                     $grade = $dm_gradelessCourseGrade;
                                 }
-                                
                             }
                         } else if ($context->contextlevel == CONTEXT_MODULE) {
                             $cm = get_coursemodule_from_id(false, $context->instanceid, 0, false, MUST_EXIST);
