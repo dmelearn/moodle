@@ -122,7 +122,7 @@ class sync_grades extends \core\task\scheduled_task {
                                 // Digital Media Support for 0.0000 Grades //
                                 $dm_gradelessCourseGrade = floatval(88.00000);
                                 if (!grade_floats_different($dm_gradelessCourseGrade, $grademax)
-                                   && grade_float_different($dm_gradelessCourseGrade, $grade)
+                                   && grade_float_different($dm_gradelessCourseGrade, $ltiuser->lastgrade)
                                    ) {
                                     $grade = $dm_gradelessCourseGrade;
                                 }
