@@ -118,6 +118,13 @@ class sync_grades extends \core\task\scheduled_task {
                             if ($grade = grade_get_course_grade($ltiuser->userid, $tool->courseid)) {
                                 $grademax = floatval($grade->item->grademax);
                                 $grade = $grade->grade;
+                                
+                                // Digital Media Support for 0.0000 Grades //
+                                $dm_gradelessCourseGrade = floatval(88.00000);
+                                if (!grade_floats_different($dm_gradelessCourseGrade, $grademax)) {
+                                    $grade = $dm_gradelessCourseGrade;
+                                }
+                                
                             }
                         } else if ($context->contextlevel == CONTEXT_MODULE) {
                             $cm = get_coursemodule_from_id(false, $context->instanceid, 0, false, MUST_EXIST);
@@ -155,7 +162,10 @@ class sync_grades extends \core\task\scheduled_task {
                         }
 
                         // Check to see if the grade has changed.
-                        if (!grade_floats_different($grade, $ltiuser->lastgrade)) {
+                        if (isset($dm_gradelessCourseGrade) && $grade === $dm_gradelessCourseGrade) {
+                            // Digital Media Don't Skip
+                            mtrace("Note - The grade $mtracecontent should be sent now.");
+                        } elseif (!grade_floats_different($grade, $ltiuser->lastgrade)) {
                             mtrace("Not sent - The grade $mtracecontent was not sent as the grades are the same.");
                             continue;
                         }
